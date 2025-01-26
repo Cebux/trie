@@ -86,21 +86,11 @@ class Trie:
 
 tree = Trie()
 
-tree.insert('hello')
-tree.insert('helloman')
-tree.insert('world')
-tree.insert('hey')
 
-print(tree.search('hello')) # True
-print(tree.search('world')) # True
-print(tree.search('hell')) # False
-
-print(tree.getMatchingWords('he')) # ['hello']
-print(tree.getMatchingWordsWithLimit('he', 1)) # ['hello']
-
-print(tree.getMatchingWords(''))
-
-print(tree.size) # 14
+# Read the words_alpha.txt file and insert each word into the trie
+with open('words_alpha.txt') as f:
+    for line in f:
+        tree.insert(line.strip())
 
 current = ''
 while True:
@@ -139,13 +129,18 @@ while True:
         cw_text = f"Current word: {current}"
         draw_text(cw_text, (20, 20))
         draw_text(f"Search result: {tree.search(current)}", (20, 60))
-        draw_text(f"Matching words: {tree.getMatchingWords(current)}", (20, 100))
-        draw_text(f"Matching words with limit: {tree.getMatchingWordsWithLimit(current, 5)}", (20, 140))
+        # draw_text(f"Matching words: {tree.getMatchingWords(current)}", (20, 100))
+        draw_text(f"Matching words with limit: {tree.getMatchingWordsWithLimit(current, 20)}", (20, 140))
         
         if current:
             matching_words = tree.getMatchingWords(current)
             if matching_words:
                 first_match = matching_words[0]
+                # Loop through the words to find one that is longer than the current word
+                for word in matching_words:
+                    if len(word) > len(current) + 1:
+                        first_match = word
+                        break
                 if len(first_match) > len(current):
                     rest_of_word = first_match[len(current):]
                     # draw_text(" " * len(cw_text) + rest_of_word, (20, 20), opacity=100)
